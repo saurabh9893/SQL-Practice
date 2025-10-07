@@ -1,0 +1,17 @@
+[problem link] (https://datalemur.com/questions/sql-highest-grossing).
+
+
+
+
+
+
+with cte as (SELECT category, product, sum(spend) as total_spend
+, rank() OVER(PARTITION BY category ORDER BY sum(spend) DESC) as ranking
+from product_spend 
+where EXTRACT(YEAR FROM transaction_date) = '2022'
+group by category, product
+order by category)
+
+select category, product, total_spend
+from cte 
+where ranking < 3
